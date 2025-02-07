@@ -1,0 +1,177 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+	\title{Implementing on Non-Linearly Separable Multivariate Data
+	}
+	
+	\author{\IEEEauthorblockN{Pawan Ram Mali (PhD)}
+		\IEEEauthorblockA{\textit{Department of CSE } \\
+			\textit{Indian Institute of Technology}\\
+			Dharwad, India \\
+			cs24dp011@iitdh.ac.in}
+		\and
+		\IEEEauthorblockN{Sachin Maurya (MS)}
+		\IEEEauthorblockA{\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology}\\
+			Dharwad, India \\
+			cs24ms002@iitdh.ac.in}
+		\and
+		\IEEEauthorblockN{Abhishek Sharma (MS)}
+		\IEEEauthorblockA{\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology}\\
+			Dharwad, India \\
+			cs24ms003@iitdh.ac.in}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		\\
+		This project delves into the implementation of a **Bayesian classifier** using multivariate Gaussian distributions to classify data points into one of three distinct classes. The classifier computes posterior probabilities based on Bayes' theorem and is evaluated using various statistical metrics. Additionally, decision boundaries are visualized to demonstrate the model's effectiveness in separating the feature space into distinct regions corresponding to the classes. Through rigorous evaluation, this project highlights the strengths of the Bayesian classifier in statistical pattern recognition.
+		
+		We provide hands-on experience in developing, evaluating, and visualizing a Bayesian classifier, while also reinforcing theoretical concepts such as Gaussian distribution assumptions, class priors, and posterior probability calculations.
+	\end{abstract}
+	
+	\section{Introduction}
+	
+	The **Bayesian classifier** is a powerful tool in statistical pattern recognition. In this project, we use it to classify data points into one of three classes based on their features. Each class is assumed to follow a multivariate Gaussian distribution. The classifier calculates the posterior probability for each class and assigns data points to the class with the highest posterior.
+	
+	This project aims to:
+	- Implement a Bayesian classifier using multivariate Gaussian distributions.
+	- Evaluate the classifier's performance with metrics such as accuracy, precision, recall, and F1-score.
+	- Visualize the decision boundaries that separate the classes, providing insight into the classifier's behavior.
+	
+	The classifier is tested on a dataset where each class is represented by two features. Through analysis and visualization, we assess how well the classifier distinguishes between classes.
+	
+	\[
+	P(C_k \mid x) = \frac{P(x \mid C_k) \cdot P(C_k)}{P(x)}
+	\]
+	
+	\begin{itemize}
+		\item \textbf{Posterior Probability} \( P(C_k \mid x) \): Probability of class \( C_k \) given the observed data \( x \).
+		\item \textbf{Prior Probability} \( P(C_k) \): Initial belief about class \( C_k \) before observing the data.
+		\item \textbf{Likelihood} \( P(x \mid C_k) \): Probability of observing data \( x \) given that the class is \( C_k \).
+		\item \textbf{Evidence} \( P(x) \): Normalizing constant ensuring the sum of posterior probabilities equals 1.
+	\end{itemize}
+	
+\section{Objectives}
+
+The primary objectives of this project are centered around the implementation and evaluation of a Bayesian classifier specifically designed to handle non-linearly separable data. Non-linear separability often presents significant challenges to traditional classification methods, making it important to explore robust alternatives like Bayesian classification. This project aims to demonstrate how a Bayesian classifier can be effectively applied in such scenarios through theoretical understanding, practical implementation, and visualization.
+
+\begin{enumerate}
+	\item \textbf{Classifier Implementation:} The first and foremost objective is to develop a Bayesian classifier capable of handling non-linearly separable data. Traditional classifiers like linear discriminant analysis struggle when classes cannot be divided by a straight line or plane. However, by modeling class distributions using multivariate Gaussian distributions and computing posterior probabilities, a Bayesian classifier is better suited for handling such complexity. The implementation focuses on calculating posterior probabilities based on Bayes' theorem and assigning data points to classes that maximize these posteriors.
+	
+	\item \textbf{Performance Evaluation:} Another key goal of the project is to thoroughly evaluate the performance of the Bayesian classifier. Evaluation metrics such as accuracy, precision, recall, and F1-score provide comprehensive insight into the effectiveness of the classifier. Accuracy will measure the overall correctness of the model, while precision, recall, and F1-score are particularly useful when dealing with imbalanced datasets, where some classes may dominate. The use of these metrics will help in identifying not only how well the classifier works but also whether its predictions are balanced across different classes.
+	
+	\item \textbf{Decision Boundary Visualization:} A crucial component of this project is the visualization of decision boundaries. Visualizations provide a clear understanding of how the Bayesian classifier is separating the classes in the feature space. Non-linear decision boundaries can be complex, and plots like contour maps and decision region plots can illustrate how well the model adapts to this complexity. These visual tools are invaluable for assessing how the classifier navigates the challenge of non-linearity in the data, making the classification process more interpretable and transparent.
+\end{enumerate}
+
+\section{Data Exploration and Preprocessing}
+
+The success of any machine learning model hinges on a deep understanding of the data. Before implementing the classifier, we perform exploratory data analysis (EDA) to assess the structure and distribution of the dataset. This process involves visualizing how the features are distributed and how the classes relate to each other. The insights gained from EDA directly inform the model development process.
+
+\subsection{Exploratory Data Analysis (EDA)}
+
+Exploratory Data Analysis is an essential first step in understanding the nature of the dataset. In this project, scatter plots and distribution plots are used to visualize the spread of the data points across different classes. For datasets with non-linearly separable classes, EDA can reveal complex relationships between features that may not be evident at first glance. For example, the scatter plots might show that classes overlap in certain regions of the feature space, which suggests that a linear classifier would be insufficient for effective classification. Instead, the Bayesian classifier's ability to model such non-linear relationships makes it a more appropriate choice for this dataset.
+
+\subsection{Data Normalization}
+
+Normalization is a crucial preprocessing step, especially when working with non-linear data. Non-linear patterns in the dataset may be exacerbated if the features have vastly different scales. Normalization ensures that all features contribute equally to the model by scaling them to a common range. In this project, we standardize the data to have zero mean and unit variance. This transformation helps the Bayesian classifier better capture the underlying distribution patterns without being affected by the different ranges of feature values.
+
+\section{Bayesian Classifier for Non-Linearly Separable Data}
+
+The Bayesian classifier leverages probability theory to assign class labels to data points. It uses multivariate Gaussian distributions to model each class and computes posterior probabilities based on these distributions.
+
+\subsection{Multivariate Gaussian Distribution}
+
+For each class in the dataset, the Bayesian classifier assumes that the data points are drawn from a multivariate Gaussian distribution. This is a natural extension of the univariate Gaussian distribution to higher dimensions. The probability density function (PDF) for a data point \( x \) belonging to class \( C_k \) is given by:
+\[
+f(x; \mu_k, \Sigma_k) = \frac{1}{(2\pi)^{d/2} |\Sigma_k|^{1/2}} \exp\left(-\frac{1}{2} (x - \mu_k)^T \Sigma_k^{-1} (x - \mu_k)\right)
+\]
+Here, \( \mu_k \) is the mean vector and \( \Sigma_k \) is the covariance matrix of class \( C_k \). The mean vector represents the center of the class distribution, while the covariance matrix captures the spread and orientation of the distribution in the feature space. These parameters are estimated from the training data, and they form the foundation for computing the likelihood of a data point belonging to a given class.
+
+\subsection{Posterior Probability Calculation}
+
+Once the likelihood is computed for each class, the Bayesian classifier calculates the posterior probability using Bayes' theorem. The posterior probability for class \( C_k \) given data point \( x \) is:
+\[
+P(C_k \mid x) = \frac{P(x \mid C_k) P(C_k)}{P(x)}
+\]
+Where \( P(C_k) \) is the prior probability of class \( C_k \), \( P(x \mid C_k) \) is the likelihood (as described above), and \( P(x) \) is the evidence, which acts as a normalizing factor. The classifier assigns each data point to the class with the highest posterior probability.
+
+\section{Handling Non-Linear Separability}
+
+One of the main challenges in this project is dealing with non-linearly separable data. In such cases, assuming that all classes share the same covariance matrix may be overly restrictive. Instead, we allow each class to have its own distinct covariance matrix. This flexibility enables the classifier to better capture the complex, non-linear decision boundaries that are needed to separate the classes effectively. The result is a more adaptable and accurate classification model that performs well even in highly non-linear scenarios.
+
+\section{Model Evaluation}
+
+To assess the effectiveness of the Bayesian classifier, we use a variety of performance metrics. These metrics give us a detailed understanding of how well the classifier performs on non-linearly separable data.
+
+\begin{itemize}
+	\item \textbf{Accuracy:} Accuracy is the most straightforward metric, measuring the percentage of correctly classified points in the dataset. However, accuracy alone can be misleading, especially in cases where the classes are imbalanced.
+	\item \textbf{Precision, Recall, F1-score:} Precision, recall, and F1-score offer a more nuanced view of the classifier’s performance. Precision measures the proportion of true positive classifications out of all positive predictions, while recall measures the proportion of true positives out of all actual positives. The F1-score is the harmonic mean of precision and recall, providing a single metric that balances the trade-off between precision and recall.
+	\item \textbf{Confusion Matrix:} The confusion matrix provides a detailed breakdown of the classifier’s performance, showing the number of true positives, false positives, true negatives, and false negatives for each class. This matrix is particularly useful for understanding where the classifier is making errors.
+\end{itemize}
+
+\section{Visualization of Decision Boundaries}
+
+Visualizing the decision boundaries is crucial for understanding how the Bayesian classifier handles non-linearly separable data. Contour plots illustrate the likelihood of different classes across the feature space, while decision region plots highlight the areas where the classifier predicts each class. These visualizations provide valuable insights into how well the classifier is able to separate the classes and navigate complex, non-linear decision boundaries.
+
+
+\section{Conclusion}
+
+The Bayesian classifier was successfully implemented and rigorously tested on a dataset containing three distinct classes. Throughout the process, the classifier demonstrated its effectiveness by accurately predicting the class membership of data points based on their features. The use of multivariate Gaussian distributions for each class allowed the model to capture the underlying patterns and relationships within the data. By leveraging Bayes' theorem, the classifier computed the posterior probabilities for each data point, assigning it to the class with the highest probability.
+
+The results from the evaluation metrics, including accuracy, precision, recall, and F1-score, reflect the model's robust performance in correctly classifying the test data. These metrics confirmed that the Bayesian classifier not only achieved high accuracy but also maintained a balanced performance across all three classes, with minimal misclassification errors.
+
+Moreover, the visualizations of decision boundaries played a critical role in providing a deeper understanding of how the classifier separates the data in the feature space. These visualizations highlighted the regions where each class was dominant and illustrated the boundaries where the classifier transitioned from predicting one class to another. The contour and decision region plots made it evident how well the model captured the complex relationships between features and class membership, offering valuable insights into the classification process.
+
+In conclusion, the combination of theoretical rigor and visual interpretability showcased by the Bayesian classifier makes it an effective tool for pattern recognition, especially in scenarios where class distributions follow a Gaussian pattern. The project's successful implementation and thorough evaluation underscore the classifier’s potential for real-world applications where accurate and interpretable classification is crucial.
+
+Future improvements could include:
+\begin{itemize}
+\item Using class-specific covariance matrices to handle cases with differing variances.
+\item Extending the model to handle higher-dimensional data.
+\end{itemize}
+
+\section*{Acknowledgment}
+
+The completion of this project would not have been possible without the guidance and support of several individuals. First and foremost, we would like to express our deepest gratitude to Dr. Dileep AD, Associate Professor and Head of the Department of Computer Science and Engineering at the Indian Institute of Technology, Dharwad, for his continuous encouragement, insightful feedback, and valuable guidance throughout this project.
+
+We are also incredibly grateful to all the Teaching Assistants who contributed their time and knowledge. Their assistance with technical concepts, problem-solving, and constructive criticism during the various phases of the project was instrumental in its successful completion. Their willingness to help and share their expertise greatly enriched our learning experience.
+
+Finally, we would like to thank the entire faculty and staff of the Department of Computer Science and Engineering at IIT Dharwad for providing us with the resources and a conducive learning environment that made this project possible.
+
+To everyone who contributed to the success of this project, we extend our heartfelt thanks.
+
+
+
+\begin{thebibliography}{00}
+
+\bibitem{b1} Duda, R. O., Hart, P. E., \& Stork, D. G. (2000). \textit{Pattern Classification} (2nd ed.). Wiley-Interscience.
+- A comprehensive textbook covering various classification techniques, including Bayes classifiers and decision theory.
+
+\bibitem{b2} Bishop, C. M. (2006). \textit{Pattern Recognition and Machine Learning}. Springer.
+- This book provides a detailed treatment of probabilistic graphical models, including Bayesian classifiers, along with examples and algorithms.
+
+\bibitem{b3} Hastie, T., Tibshirani, R., \& Friedman, J. (2009). \textit{The Elements of Statistical Learning: Data Mining, Inference, and Prediction} (2nd ed.). Springer.
+- A well-known reference for statistical learning that includes a section on Naive Bayes classifiers and their applications.
+
+\bibitem{b4} Mitchell, T. M. (1997). \textit{Machine Learning}. McGraw-Hill.
+- One of the seminal texts in machine learning, providing an introduction to the fundamentals of Bayes classification and probabilistic learning.
+
+\bibitem{b5} Murphy, K. P. (2012). \textit{Machine Learning: A Probabilistic Perspective}. MIT Press.
+- A detailed guide to machine learning methods with a probabilistic approach, including extensive discussions on Bayesian classification techniques.
+
+\end{thebibliography}
+
+
+\end{document}

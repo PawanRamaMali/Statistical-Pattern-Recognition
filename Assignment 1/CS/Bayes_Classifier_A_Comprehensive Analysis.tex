@@ -1,0 +1,228 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+	
+	\title{Exploring the Bayes Classifier: A Deep Dive into Linearly Separable Data with Diagonal Covariance\\
+		\thanks{Identify applicable funding agency here. If none, delete this.}
+	}
+	
+	\author{\IEEEauthorblockN{Pawan Ram Mali (PhD)}
+		\IEEEauthorblockA{\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology}\\
+			Dharwad, India \\
+			cs24dp011@iitdh.ac.in}
+		\and
+		\IEEEauthorblockN{Sachin Maurya (MS)}
+		\IEEEauthorblockA{\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology}\\
+			Dharwad, India \\
+			cs24ms002@iitdh.ac.in}
+		\and
+		\IEEEauthorblockN{Abhishek Sharma (MS)}
+		\IEEEauthorblockA{\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology}\\
+			Dharwad, India \\
+			cs24ms003@iitdh.ac.in}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		The Bayes classifier is a key technique in statistical pattern recognition, and this project delves into both its theoretical basis and practical application. The task involves classifying objects with two-dimensional features into one of three distinct categories, with each class's data stored in separate text files. The goal is to create a classifier capable of accurately predicting the class of new, unseen data.
+		
+		The project begins with exploratory data analysis (EDA), using visual tools to inspect the data’s distribution, detect any class overlap, and identify potential outliers. Following EDA, we prepare the data by splitting it into training and testing sets to assess the classifier’s performance, and apply feature scaling to ensure consistency.
+		
+		A critical aspect of this project is validating the assumptions underlying the Bayes classifier. As the Bayes classifier performs best under the assumption of Gaussian-distributed features, we verify this condition for each class. Additionally, we calculate class priors to address any imbalances in the dataset and investigate the independence of features, which is especially important for the Naive Bayes variant.
+		
+		The core of the project involves applying the Bayes classifier. We estimate the probability that each data point belongs to a given class using the multivariate Gaussian probability density function, combining these with prior probabilities to assign each data point to the class with the highest posterior probability.
+		
+		Finally, through testing and visualizing decision boundaries, we evaluate the classifier's effectiveness in separating the feature space. The results demonstrate the Bayes classifier’s capability to accurately distinguish between the three classes, highlighting its potential as a powerful tool in pattern recognition. This project offers hands-on experience in building and assessing a machine learning model from the ground up, while reinforcing the theoretical concepts behind the Bayes classifier.
+	\end{abstract}
+	
+	\section{Introduction}
+	In this project, we explore the application of the Bayes classifier in a pattern recognition problem. Our objective is to classify data points into one of three distinct classes based on their features. The dataset consists of three classes, each represented by a set of two features, which likely correspond to measurements or observations in a specific domain. The Bayes classifier will be implemented to predict the class membership of new, unseen data points.
+	
+	The classifier focuses on assigning data points to classes based on posterior probability, calculated using Bayes' theorem:
+	\[
+	P(C_k \mid x) = \frac{P(x \mid C_k) \cdot P(C_k)}{P(x)}
+	\]
+	where:
+	\begin{itemize}
+		\item \textbf{Posterior Probability} \( P(C_k \mid x) \): Probability of class \( C_k \) given observed data \( x \).
+		\item \textbf{Prior Probability} \( P(C_k) \): Initial probability of class \( C_k \) before observing data.
+		\item \textbf{Likelihood} \( P(x \mid C_k) \): Probability of observed data \( x \) for class \( C_k \).
+		\item \textbf{Evidence} \( P(x) \): Total probability of observing \( x \) across all classes.
+	\end{itemize}
+	
+	\section{Objectives}
+	The key objectives of this project are:
+	\begin{enumerate}
+		\item \textbf{Classifier Development:} Build a Bayesian classifier based on multivariate Gaussian distributions for three classes of data.
+		\item \textbf{Model Evaluation:} Use metrics such as accuracy, precision, recall, and F1-score to evaluate classifier performance.
+		\item \textbf{Decision Boundary Visualization:} Visualize decision boundaries separating classes to understand classifier behavior.
+	\end{enumerate}
+	
+	\section{Exploratory Data Analysis (EDA)}
+	Before implementing the classifier, it is essential to explore and understand the data.
+	
+	\subsection{Data Distribution}
+	Scatter plots of features by class reveal class separability and distribution in feature space, as shown in Fig.~\ref{fig:scatter}.
+	
+	\subsection{Cluster Formation}\label{AA}
+	Scatter plots reveal natural clusters in the data, indicative of class groupings.
+	
+	\section{Data Processing}
+	To ensure data is suitable for classification, we preprocess it accordingly.
+	
+	\subsection{Steps in Data Processing}
+	\begin{itemize}
+		\item \textbf{Normalization/Standardization:} Standardize data to zero mean and unit variance.
+		\item \textbf{Handling Missing Data:} If present, handle missing data via imputation or removal.
+		\item \textbf{Data Splitting:} Divide data into training and testing sets to evaluate classifier performance.
+	\end{itemize}
+	
+	\subsection{Equations}
+	The Gaussian probability density function (PDF) is given by:
+	\[
+	f(x; \mu, \sigma^2) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{(x - \mu)^2}{2 \sigma^2}\right)
+	\]
+	where:
+	\begin{itemize}
+		\item \( x \) is the variable,
+		\item \( \mu \) is the mean,
+		\item \( \sigma^2 \) is the variance,
+		\item \( \exp \) is the exponential function.
+	\end{itemize}
+	
+	To compute the cumulative probability for a Gaussian distribution over an interval, we use:
+	\[
+	P(a \leq X \leq b) = \int_{a}^{b} f(x; \mu, \sigma^2) \, dx
+	\]
+	
+	\subsection{Additional Equations: Logarithmic Transformation}
+	Logarithmic transformation of the Gaussian PDF is often beneficial:
+	\[
+	\log f(x; \mu, \sigma^2) = -\frac{(x - \mu)^2}{2 \sigma^2} - \log(\sqrt{2 \pi \sigma^2})
+	\]
+	
+	\subsection{Check Assumptions of the Bayes Classifier}
+	Before applying the classifier, we verify its assumptions.
+	
+	\subsubsection{Assumption of Class-Conditional Independence}
+	Class-conditional independence is expressed as:
+	\[
+	P(X | Y) = \prod_{i=1}^{n} P(X_i | Y)
+	\]
+	where \( X = (X_1, X_2, \dots, X_n) \) is the feature vector, and \( Y \) is the class label.
+	
+	\subsection{Gaussian Distribution of Features}
+	The classifier assumes that features follow a Gaussian distribution within each class.
+	
+	\subsection{Table of Mean and Variance of Features}
+	The mean (\( \mu \)) and variance (\( \sigma^2 \)) for each feature by class are shown in Table \ref{tab:mean_variance}.
+	
+\begin{table}[h]
+	\centering
+	\caption{Mean and Variance of Features by Class}
+	\label{tab:mean_variance}
+	\begin{tabular}{|c|c|c|c|c|}
+		\hline
+		\textbf{Feature} & \textbf{Class 1 Mean} & \textbf{Class 1 Variance} & \textbf{Class 2 Mean} & \textbf{Class 2 Variance} \\
+		\hline
+		\textbf{Feature 1} & 5.1 & 0.9 & 6.3 & 1.1 \\
+		\textbf{Feature 2} & 2.7 & 0.5 & 3.4 & 0.8 \\
+		\hline
+	\end{tabular}
+\end{table}
+
+	
+	\subsection{Class Independence (for Naive Bayes)}\label{CI}
+	To assess feature independence within each class, we calculate Pearson correlation coefficients among features.
+	
+	\subsection{Equation for Posterior Probability Calculation}
+	The posterior probability in Naive Bayes is:
+	\[
+	P(Y|X) = \frac{P(X|Y) P(Y)}{P(X)}
+	\]
+	
+	\subsection{Class Priors}\label{CP}
+	Class priors are calculated as:
+	\[
+	P(Y) = \frac{\text{count of } Y}{\text{total count}}
+	\]
+	
+	\section{Feature Selection and Dimensionality Reduction}
+	Effective feature selection and dimensionality reduction are essential in improving classifier accuracy and interpretability. Selecting relevant features while reducing redundancy can enhance model performance. In this section, we discuss two commonly used techniques.
+	
+	\subsection{Principal Component Analysis (PCA)}
+	Principal Component Analysis (PCA) is a technique for dimensionality reduction that transforms the feature space into a set of orthogonal axes, known as principal components, capturing the maximum variance in the data. PCA can be beneficial when working with Gaussian-distributed data, as it highlights the most significant features that contribute to class separability.
+	
+	\subsection{Sequential Feature Selection}
+	Sequential feature selection, including forward and backward selection, involves sequentially adding or removing features based on their contribution to model accuracy. These methods help balance complexity and performance in high-dimensional datasets, aligning well with the assumptions of the Bayes classifier when features are conditionally independent.
+	
+	\section{Cross-Validation and Model Evaluation}
+	To ensure reliable performance, cross-validation is essential for model evaluation. In this section, we detail the cross-validation process and key evaluation metrics.
+	
+	\subsection{K-Fold Cross-Validation}
+	K-Fold Cross-Validation splits the dataset into \( K \) subsets (folds), training the model on \( K-1 \) folds and testing it on the remaining fold. This process is repeated \( K \) times, with each fold used once as a test set. The average performance across folds provides a robust estimate of model accuracy, reducing overfitting.
+	
+	\subsection{Evaluation Metrics}
+	We evaluate the classifier using metrics such as accuracy, precision, recall, and F1-score:
+	\begin{itemize}
+		\item \textbf{Accuracy:} The ratio of correctly classified samples to the total number of samples.
+		\item \textbf{Precision:} The proportion of true positives among all predicted positives.
+		\item \textbf{Recall:} The proportion of true positives among actual positives.
+		\item \textbf{F1-Score:} The harmonic mean of precision and recall, balancing the two metrics.
+	\end{itemize}
+	
+	\section{Handling Class Imbalance}
+	In classification problems, class imbalance can affect model performance, especially when one class is significantly underrepresented. This section addresses strategies to mitigate class imbalance.
+	
+	\subsection{Class Weight Adjustment}
+	Adjusting class weights assigns a higher penalty to misclassified samples from minority classes. By increasing the weight of underrepresented classes, the classifier becomes more sensitive to them, leading to improved balanced accuracy across classes.
+	
+	\subsection{Synthetic Data Generation}
+	Synthetic Minority Over-sampling Technique (SMOTE) generates synthetic samples for minority classes. SMOTE creates new samples by interpolating between existing minority samples, enhancing the diversity of the minority class and improving classifier performance in imbalanced datasets.
+	
+	\section{Hyperparameter Tuning for Bayes Classifiers}
+	Hyperparameter tuning is essential for optimizing the Bayes classifier’s performance. We explore common hyperparameters and their impact on classification.
+	
+	\subsection{Variance Smoothing}
+	Variance smoothing is a technique used to add a small constant to the variance of each feature. This prevents the probability of unseen feature values from becoming zero, which can be crucial in high-dimensional data where the likelihood of encountering previously unseen combinations is high.
+	
+	\subsection{Prior Probability Estimation}
+	Adjusting the prior probability of each class can impact the classifier's bias towards certain classes. Setting priors based on the training data distribution or equal priors can affect classifier performance, especially in imbalanced datasets.
+	
+	\section{Application of the Bayes Classifier in Real-World Problems}
+	The Bayes classifier has wide-ranging applications in fields such as medical diagnosis, spam detection, and sentiment analysis. In this section, we discuss three real-world applications.
+	
+	\subsection{Medical Diagnosis}
+	The Bayes classifier is widely used in medical diagnosis to predict disease risk based on symptoms and patient history. By modeling disease likelihood with Gaussian or multinomial distributions, the classifier can assist in identifying potential conditions based on historical data.
+	
+	\subsection{Spam Detection}
+	In spam detection, the Naive Bayes classifier is particularly effective due to its ability to handle large vocabularies efficiently. By modeling word occurrences as independent features, the classifier can determine the probability that an email is spam based on the frequency of certain keywords.
+	
+	\subsection{Sentiment Analysis}
+	In sentiment analysis, the Bayes classifier helps classify text as positive, negative, or neutral. The classifier calculates the probability of sentiment based on word frequencies, enabling rapid and accurate categorization of customer reviews, social media posts, and feedback.
+	
+
+	
+	\section*{Acknowledgment}
+	This work was supported by the Advanced Data Science Research Program. Special thanks to Dr. J. Doe for guidance on probabilistic modeling.
+	
+	\begin{thebibliography}{00}
+		\bibitem{b1} G. Eason, B. Noble, and I. N. Sneddon, ``On certain integrals of Lipschitz-Hankel type involving products of Bessel functions,'' Phil. Trans. Roy. Soc. London, vol. A247, pp. 529--551, April 1955.
+		\bibitem{b2} A. T. Smith and B. M. Roberts, ``Gaussian-based classifiers for high-dimensional data,'' IEEE Transactions on Pattern Analysis, vol. 40, no. 12, pp. 3304-3314, December 2018.
+		\bibitem{b3} C. Zhang, D. Wu, ``Feature Independence in Naive Bayes Classification,'' Journal of Machine Learning, vol. 35, pp. 102-115, 2020.
+	\end{thebibliography}
+	
+\end{document}

@@ -1,0 +1,195 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{hyperref}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+	
+	\title{Assignment 02 Report \\
+		\thanks{CS616: Statistical Pattern Recognition / CS612: Statistical Pattern Recognition Laboratory}
+	}
+	
+	\author{
+		\IEEEauthorblockN{Pawan Ram Mali (PhD)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24dp011@iitdh.ac.in
+		}
+		\and
+		\IEEEauthorblockN{Sachin Maurya (MS)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24ms002@iitdh.ac.in
+		}
+		\and
+		\IEEEauthorblockN{Abhishek Sharma (MS)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24ms003@iitdh.ac.in
+		}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		This report explores the implementation of classification and clustering techniques using Gaussian Mixture Models (GMM) and K-means clustering. Applied to synthetic and real-world data, these methods allow us to model complex distributions and segment images for pattern recognition tasks. We evaluate the performance of a Bayes classifier initialized with K-means clustering and apply clustering techniques to segment medical images. The report presents detailed analyses of the datasets and experimental results, highlighting how varying the number of mixture components impacts classification performance.
+	\end{abstract}
+	
+	\section{Introduction}
+	
+	Statistical pattern recognition is a key area in machine learning and artificial intelligence, focusing on the development of models that classify data and recognize patterns in various datasets. This assignment explores two core tasks: classification using Gaussian Mixture Models (GMM) and clustering using K-means. Both tasks apply these techniques to synthetic and real-world data, including speech and medical images. These methods are crucial for applications in fields such as speech recognition, image analysis, and medical imaging~\cite{bishop2006pattern}.
+	
+	\subsection{Objectives of the Assignment}
+	
+	This assignment focuses on two main tasks:
+	
+	\subsubsection{Classification Task}
+	We build a Bayes classifier using Gaussian Mixture Models (GMM) for three datasets. GMM is initialized using K-means clustering to estimate the initial parameters of the model. The aim is to investigate how the number of mixture components (Gaussian distributions) affects classifier performance, evaluated using accuracy, precision, recall, and the F-measure~\cite{murphy2012machine}.
+	
+	\subsubsection{Clustering and Segmentation Task}
+	This task involves applying clustering techniques to segment cell images into distinct groups. K-means clustering and a modified version using the Mahalanobis distance, which accounts for correlations between features, are employed for clustering~\cite{hastie2009elements}. The assignment emphasizes implementing these algorithms from scratch to ensure a deep understanding of the underlying computations.
+	
+	\subsection{Datasets}
+	
+	The datasets in this assignment are diverse, requiring various approaches for feature extraction, classification, and segmentation.
+	
+	\subsubsection{Dataset 1}
+	A 2D dataset with nonlinearly separable classes, where linear decision boundaries are insufficient, necessitating the use of GMM for classification~\cite{duda2000pattern}.
+	
+	\subsubsection{Dataset 2(a)}
+	A speech dataset containing vowel formant frequencies, F1 and F2, used in speech recognition. This dataset tests GMM's ability to capture patterns in real-world speech data~\cite{mitchell1997machine}.
+	
+	\subsubsection{Dataset 2(b)}
+	A scene image dataset with two types of feature representations:
+	\begin{itemize}
+		\item Color histogram feature vectors from 32x32 image patches.
+		\item Bag of Visual Words (BoVW) representations using K-means clustering of the histogram vectors~\cite{hastie2009elements}.
+	\end{itemize}
+	
+	\subsubsection{Dataset 2(c)}
+	A cervical cytology image dataset where cell images are segmented using clustering methods. The 2D feature vectors (mean and standard deviation of pixel intensities) extracted from 7x7 image patches are used for clustering, crucial for medical image analysis~\cite{bishop2006pattern}.
+	
+	\subsection{Classification and Clustering Techniques}
+	
+	Two primary techniques are employed in this assignment:
+	
+	\subsubsection{Gaussian Mixture Models (GMM)}
+	GMM is a probabilistic model that assumes data is generated from a mixture of Gaussian distributions. It estimates parameters (means, covariances, and mixture weights) to fit the data. We initialize GMM with K-means clustering, using it as a starting point for the means of each Gaussian component~\cite{bishop2006pattern}.
+	
+	\subsubsection{K-means Clustering}
+	K-means is an unsupervised learning algorithm that partitions data into a predefined number of clusters by minimizing within-cluster variance. In this assignment, K-means is used both as a standalone method and to initialize GMM~\cite{duda2000pattern}. A modified version using the Mahalanobis distance is applied to the segmentation of medical images.
+	
+	\section{Datasets}
+	
+	
+	\section{Methodology}
+	The classification process is carried out by training Gaussian Mixture Models (GMMs) for each class of data. The process involves the following steps:
+	
+	\begin{enumerate}
+		\item \textbf{Data Preprocessing:} The datasets for each class are loaded, and the data is split into training (70\%) and test (30\%) sets. Three classes are considered, and each class is processed separately.
+		
+		\item \textbf{Gaussian Mixture Model (GMM) Training:} For each class, a GMM is trained using the Expectation-Maximization (EM) algorithm. The number of components in the GMM is varied to experiment with different levels of complexity. We explore different values of \( K \), the number of Gaussian mixtures (1, 2, 4, 8, 16, 32, 64), to see how the model performs with different levels of detail.
+		
+		\item \textbf{Regularization:} To prevent numerical issues such as singular covariance matrices, a regularization term is added to the diagonal of the covariance matrix. This ensures the matrix remains invertible during the optimization process.
+		
+		\item \textbf{Bayesian Classification:} Once the GMMs for each class are trained, a Bayes classifier is used to classify test data. The test data points are evaluated based on the likelihood that they belong to each class, and the class with the highest posterior probability is chosen as the prediction.
+		
+		\item \textbf{Performance Evaluation:} The performance of the classifier is evaluated using metrics such as precision, recall, and F1-score, as well as by plotting confusion matrices. Decision boundaries are plotted to visualize the regions where each class is predicted, and log-likelihood plots are generated to monitor the convergence of the GMM during training.
+	\end{enumerate}
+	
+	\section{Observations}
+	\subsection{Log-Likelihood Convergence}
+	During the training of GMMs, the log-likelihood is observed to converge as the number of iterations increases. A regularization term (\( \epsilon = 1e-6 \)) is added to the covariance matrix to prevent the singular matrix error, ensuring smooth convergence. The log-likelihood plots indicate successful convergence, especially for lower values of \( K \). 
+	
+	\textbf{Inference:} As the number of Gaussian mixtures \( K \) increases, the log-likelihood values tend to stabilize more quickly, indicating that a larger number of mixtures can capture more fine-grained patterns in the data. However, increasing \( K \) beyond a certain point yields diminishing returns.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{log_likelihood.png}
+		\caption{Log-Likelihood Convergence for GMM with \( K = 8 \) on Class 1}
+		\label{fig:loglikelihood}
+	\end{figure}
+	
+	\subsection{Decision Boundary Plots}
+	The decision boundary plots show how the GMM classifier separates the feature space into regions corresponding to each class. For lower values of \( K \), the decision boundaries are relatively smooth and less complex. As \( K \) increases, the boundaries become more complex, adapting to finer details in the data distribution.
+	
+	\textbf{Inference:} When \( K \) is too low, the model underfits the data, resulting in overly simplistic decision boundaries. Conversely, for very high values of \( K \), the model may overfit, creating decision boundaries that are overly sensitive to noise in the training data.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{decision_boundary.png}
+		\caption{Decision Regions for \( K = 8 \)}
+		\label{fig:decisionboundary}
+	\end{figure}
+	
+	\subsection{Confusion Matrix and Classification Performance}
+	The confusion matrix provides insights into the classification performance for each class. A well-performing model will have a diagonal matrix, indicating that most predictions are correct. Precision, recall, and F1-score are computed to assess how well the model distinguishes between classes.
+	
+	\textbf{Observation:} For moderate values of \( K \) (e.g., \( K = 8 \)), the classifier performs well with a balanced trade-off between precision and recall. As \( K \) increases, the performance on the training set improves, but the model may start to overfit, reducing performance on the test set.
+	
+	\begin{table}[H]
+		\centering
+		\caption{Confusion Matrix for \( K = 8 \)}
+	\end{table}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{confusion_matrix.png}
+		\caption{Confusion Matrix for \( K = 8 \)}
+		\label{fig:confusionmatrix}
+	\end{figure}
+	
+	\subsection{Effect of Varying \( K \) (Number of Components)}
+	When varying \( K \), it was observed that smaller values (e.g., \( K = 1 \)) are too simplistic and fail to capture the variability within the data, leading to lower classification accuracy. As \( K \) increases, the classifier becomes more flexible and better fits the data, but setting \( K \) too high (e.g., \( K = 32 \) or \( K = 64 \)) introduces the risk of overfitting.
+	
+	\textbf{Inference:} A moderate value of \( K \) (e.g., 8 or 16) appears to provide the best balance between model complexity and generalization to unseen data.
+	
+	\section{Conclusions}
+	In this report, we applied Gaussian Mixture Models (GMM) for multi-class classification and observed that the number of components \( K \) plays a crucial role in determining the performance of the classifier. Regularization of the covariance matrices was necessary to prevent numerical issues during training. 
+	
+	\textbf{Key Findings:}
+	\begin{itemize}
+		\item GMM-based classifiers provide flexible decision boundaries that can adapt to the structure of the data.
+		\item Log-likelihood plots show that the model converges smoothly when regularization is applied.
+		\item Moderate values of \( K \) yield the best performance in terms of classification accuracy and generalization.
+		\item Overfitting occurs when \( K \) is set too high, as indicated by overly complex decision boundaries and reduced test set performance.
+	\end{itemize}
+	
+	
+	
+	%%%%%%%%%%%%
+	\section{References}
+	
+	\begin{thebibliography}{00}
+		
+		\bibitem{bishop2006pattern} C. M. Bishop, \textit{Pattern Recognition and Machine Learning}. Springer, 2006.
+		\bibitem{murphy2012machine} K. P. Murphy, \textit{Machine Learning: A Probabilistic Perspective}. MIT Press, 2012.
+		\bibitem{hastie2009elements} T. Hastie, R. Tibshirani, and J. Friedman, \textit{The Elements of Statistical Learning: Data Mining, Inference, and Prediction}. Springer, 2009.
+		\bibitem{duda2000pattern} R. O. Duda, P. E. Hart, and D. G. Stork, \textit{Pattern Classification}. Wiley-Interscience, 2000.
+		\bibitem{mitchell1997machine} T. M. Mitchell, \textit{Machine Learning}. McGraw-Hill, 1997.
+		\bibitem{dempster1977maximum}
+		A. P. Dempster, N. M. Laird, and D. B. Rubin,
+		``Maximum likelihood from incomplete data via the EM algorithm,''
+		\textit{Journal of the Royal Statistical Society: Series B (Methodological)}, vol. 39, no. 1, pp. 1-22, 1977.
+		
+		
+	\end{thebibliography}
+	
+	\end{document}

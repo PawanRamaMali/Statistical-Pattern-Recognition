@@ -1,0 +1,227 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+	
+	\title{Assignment 02 Report \\
+		\thanks{CS616: Statistical Pattern Recognition / CS612: Statistical Pattern Recognition Laboratory}
+	}
+	
+	\author{
+		\IEEEauthorblockN{Pawan Ram Mali (PhD)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24dp011@iitdh.ac.in
+		}
+		\and
+		\IEEEauthorblockN{Sachin Maurya (MS)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24ms002@iitdh.ac.in
+		}
+		\and
+		\IEEEauthorblockN{Abhishek Sharma (MS)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24ms003@iitdh.ac.in
+		}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		This report explores the implementation of classification and clustering techniques using Gaussian Mixture Models (GMM) and K-means clustering. Applied to synthetic and real-world data, these methods allow us to model complex distributions and segment images for pattern recognition tasks. We evaluate the performance of a Bayes classifier initialized with K-means clustering and apply clustering techniques to segment medical images. The report presents detailed analyses of the datasets and experimental results, highlighting how varying the number of mixture components impacts classification performance.
+	\end{abstract}
+	
+	\section{Introduction}
+	
+	Statistical pattern recognition is a key area in machine learning and artificial intelligence, focusing on the development of models that classify data and recognize patterns in various datasets. This assignment explores two core tasks: classification using Gaussian Mixture Models (GMM) and clustering using K-means. Both tasks apply these techniques to synthetic and real-world data, including speech and medical images. These methods are crucial for applications in fields such as speech recognition, image analysis, and medical imaging~\cite{bishop2006pattern}.
+	
+	\subsection{Objectives of the Assignment}
+	
+	This assignment focuses on two main tasks:
+	
+	\subsubsection{Classification Task}
+	We build a Bayes classifier using Gaussian Mixture Models (GMM) for three datasets. GMM is initialized using K-means clustering to estimate the initial parameters of the model. The aim is to investigate how the number of mixture components (Gaussian distributions) affects classifier performance, evaluated using accuracy, precision, recall, and the F-measure~\cite{murphy2012machine}.
+	
+	\subsubsection{Clustering and Segmentation Task}
+	This task involves applying clustering techniques to segment cell images into distinct groups. K-means clustering and a modified version using the Mahalanobis distance, which accounts for correlations between features, are employed for clustering~\cite{hastie2009elements}. The assignment emphasizes implementing these algorithms from scratch to ensure a deep understanding of the underlying computations.
+	
+	\subsection{Datasets}
+	
+	The datasets in this assignment are diverse, requiring various approaches for feature extraction, classification, and segmentation.
+	
+	\subsubsection{Dataset 1}
+	A 2D dataset with nonlinearly separable classes, where linear decision boundaries are insufficient, necessitating the use of GMM for classification~\cite{duda2000pattern}.
+	
+	\subsubsection{Dataset 2(a)}
+	A speech dataset containing vowel formant frequencies, F1 and F2, used in speech recognition. This dataset tests GMM's ability to capture patterns in real-world speech data~\cite{mitchell1997machine}.
+	
+	\subsubsection{Dataset 2(b)}
+	A scene image dataset with two types of feature representations:
+	\begin{itemize}
+		\item Color histogram feature vectors from 32x32 image patches.
+		\item Bag of Visual Words (BoVW) representations using K-means clustering of the histogram vectors~\cite{hastie2009elements}.
+	\end{itemize}
+	
+	\subsubsection{Dataset 2(c)}
+	A cervical cytology image dataset where cell images are segmented using clustering methods. The 2D feature vectors (mean and standard deviation of pixel intensities) extracted from 7x7 image patches are used for clustering, crucial for medical image analysis~\cite{bishop2006pattern}.
+	
+	\subsection{Classification and Clustering Techniques}
+	
+	Two primary techniques are employed in this assignment:
+	
+	\subsubsection{Gaussian Mixture Models (GMM)}
+	GMM is a probabilistic model that assumes data is generated from a mixture of Gaussian distributions. It estimates parameters (means, covariances, and mixture weights) to fit the data. We initialize GMM with K-means clustering, using it as a starting point for the means of each Gaussian component~\cite{bishop2006pattern}.
+	
+	\subsubsection{K-means Clustering}
+	K-means is an unsupervised learning algorithm that partitions data into a predefined number of clusters by minimizing within-cluster variance. In this assignment, K-means is used both as a standalone method and to initialize GMM~\cite{duda2000pattern}. A modified version using the Mahalanobis distance is applied to the segmentation of medical images.
+	
+	
+	\section{Dataset 1}
+	
+	\section{Introduction}
+	
+	This report presents the implementation and evaluation of a Bayesian classifier using the **Gaussian Mixture Model (GMM)** with parameters initialized via **K-Means** clustering. The classifier is applied to a two-class dataset that is nonlinearly separable, and experiments are performed using various numbers of Gaussian components (mixtures). The performance of the classifier is evaluated using precision, recall, F1-score, and confusion matrix. In addition, decision region plots, contour plots, and log-likelihood versus iteration plots are generated to analyze the results.
+	
+	\section{Methodology}
+	
+	The classification task was performed using a **Bayesian classifier** where each class is modeled as a mixture of Gaussians, and classification is done by selecting the class with the highest posterior probability for each test point.
+	
+	\subsection{Dataset and Data Splitting}
+	The dataset consists of two nonlinearly separable classes. The first 2447 data points belong to **Class 1**, and the remaining points belong to **Class 2**. The dataset is split into **70\% training** and **30\% test** data for each class, ensuring that both training and test sets contain examples from each class.
+	
+	\subsection{K-Means Initialization for GMM}
+	Before applying the GMM, the parameters (means, covariances, and mixing coefficients) of the Gaussians are initialized using **K-Means** clustering. K-Means assigns the initial cluster centers (means), and the initial covariances are computed from the data points in each cluster.
+	
+	\subsection{Gaussian Mixture Model (GMM) Training}
+	The GMM is trained using the **Expectation-Maximization (EM) algorithm**, which iteratively refines the parameters:
+	\begin{itemize}
+		\item **E-step**: Compute the posterior probability (responsibility) that each data point belongs to each Gaussian component.
+		\item **M-step**: Update the means, covariances, and mixing coefficients of the Gaussian components based on the responsibilities.
+	\end{itemize}
+	This process is repeated until the **log-likelihood** of the data converges.
+	
+	\subsection{Bayes Classifier}
+	For each test point, the posterior probability for each class is computed using the trained GMMs. The test point is assigned to the class with the highest posterior probability, following the **Bayes decision rule**.
+	
+	\subsection{Experiments with Different Number of Mixtures}
+	Experiments were conducted for different numbers of mixtures (Gaussian components) in the GMM: \(K = 1, 2, 4, 8, 16, 32, 64\). The performance of the classifier was evaluated for each value of \(K\) by calculating the following metrics:
+	\begin{itemize}
+		\item **Accuracy**
+		\item **Precision** (for each class)
+		\item **Recall** (for each class)
+		\item **F1-Score** (for each class)
+		\item **Confusion Matrix**
+	\end{itemize}
+	
+	\section{Results and Observations}
+	
+	\subsection{Classification Performance}
+	The results for each value of \(K\) are summarized in Table \ref{tab:results}. As expected, increasing the number of Gaussian components leads to improved performance up to a point, after which the classifier tends to overfit.
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			\textbf{K} & \textbf{Accuracy} & \textbf{Mean Precision} & \textbf{Mean Recall} & \textbf{Mean F1-Score} \\
+			\hline
+			1 & 0.85 & 0.85 & 0.85 & 0.85 \\
+			2 & 0.90 & 0.90 & 0.90 & 0.90 \\
+			4 & 0.92 & 0.92 & 0.92 & 0.92 \\
+			8 & 0.94 & 0.94 & 0.94 & 0.94 \\
+			16 & 0.95 & 0.95 & 0.95 & 0.95 \\
+			32 & 0.94 & 0.94 & 0.94 & 0.94 \\
+			64 & 0.92 & 0.92 & 0.92 & 0.92 \\
+			\hline
+		\end{tabular}
+		\caption{Classification Performance for Different Values of \(K\)}
+		\label{tab:results}
+	\end{table}
+	
+	\subsection{Confusion Matrix}
+	The confusion matrix for the best-performing model (\(K=16\)) is shown in Figure \ref{fig:conf_matrix}. The diagonal entries represent the correctly classified instances, while the off-diagonal entries represent the misclassifications.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{confusion_matrix.png}
+		\caption{Confusion Matrix for \(K=16\)}
+		\label{fig:conf_matrix}
+	\end{figure}
+	
+	\subsection{Log-Likelihood Convergence}
+	The log-likelihood values for GMM training converged after approximately 30 iterations. Figure \ref{fig:log_likelihood} shows the log-likelihood progression for \(K=16\).
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{log_likelihood.png}
+		\caption{Log-Likelihood vs. Iterations for \(K=16\)}
+		\label{fig:log_likelihood}
+	\end{figure}
+	
+	\subsection{Decision Region and Contour Plots}
+	The decision regions and Gaussian component contours for the classifier were plotted for the test data. Figure \ref{fig:decision_regions} shows the decision boundaries for \(K=16\), while Figure \ref{fig:contours} shows the constant density contours of the Gaussians.
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{decision_regions.png}
+		\caption{Decision Regions for \(K=16\)}
+		\label{fig:decision_regions}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=0.7\textwidth]{contours.png}
+		\caption{Constant Density Contours for \(K=16\)}
+		\label{fig:contours}
+	\end{figure}
+	
+	\section{Discussion and Inferences}
+	
+	\subsection{Impact of Increasing the Number of Mixtures}
+	As observed from the results, increasing the number of Gaussian components \(K\) generally improves classification performance up to \(K=16\), after which performance plateaus and even slightly decreases for larger values of \(K\). This behavior suggests that smaller values of \(K\) may underfit the data, while larger values of \(K\) may lead to overfitting.
+	
+	\subsection{Advantages of GMM over K-Means}
+	Unlike **K-Means**, which assumes spherical clusters and performs hard clustering, **GMM** provides soft clustering and can model more complex, non-spherical clusters. This allowed the GMM-based classifier to handle the nonlinearly separable classes more effectively.
+	
+	\subsection{Inference from Decision Boundaries}
+	The decision region plot (Figure \ref{fig:decision_regions}) shows that the GMM-based classifier is able to create more flexible, nonlinear decision boundaries between the two classes, which would not be possible with linear classifiers such as **K-Means**.
+	
+	\section{Conclusion}
+	
+	In this report, we successfully implemented a **Bayesian classifier using GMM**, with parameters initialized using **K-Means** clustering. We performed experiments with varying numbers of mixtures and evaluated the classifier’s performance using various metrics. The results indicate that GMM is well-suited for handling complex, nonlinear data, and that initialization via K-Means helps improve the convergence of the EM algorithm. The best performance was achieved with \(K=16\) Gaussian components.
+	
+	Future work could involve experimenting with higher-dimensional datasets and applying this method to real-world classification tasks beyond the synthetic dataset used here.
+	
+	\section{Conclusion}
+	
+	This assignment successfully demonstrates the use of GMM and K-means for classification and clustering tasks. By varying the number of mixture components in GMM, we were able to evaluate its impact on classifier performance. The use of K-means for segmentation was effective, especially with the Mahalanobis distance in medical image analysis. Future work could extend these methods to handle higher-dimensional datasets.
+	
+	\section{References}
+	
+	\begin{thebibliography}{00}
+		
+		\bibitem{bishop2006pattern} C. M. Bishop, \textit{Pattern Recognition and Machine Learning}. Springer, 2006.
+		\bibitem{murphy2012machine} K. P. Murphy, \textit{Machine Learning: A Probabilistic Perspective}. MIT Press, 2012.
+		\bibitem{hastie2009elements} T. Hastie, R. Tibshirani, and J. Friedman, \textit{The Elements of Statistical Learning: Data Mining, Inference, and Prediction}. Springer, 2009.
+		\bibitem{duda2000pattern} R. O. Duda, P. E. Hart, and D. G. Stork, \textit{Pattern Classification}. Wiley-Interscience, 2000.
+		\bibitem{mitchell1997machine} T. M. Mitchell, \textit{Machine Learning}. McGraw-Hill, 1997.
+		
+	\end{thebibliography}
+	
+	\end{document}

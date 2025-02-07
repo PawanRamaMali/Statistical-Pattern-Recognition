@@ -1,0 +1,137 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+		T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+	
+	\title{[Insert Your Title Here]\\
+		\thanks{Identify applicable funding agency here. If none, delete this.}
+	}
+	
+	\author{
+		\IEEEauthorblockN{Pawan Ram Mali (PhD)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24dp011@iitdh.ac.in
+		}
+		\and
+		\IEEEauthorblockN{Sachin Maurya (MS)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24ms002@iitdh.ac.in
+		}
+		\and
+		\IEEEauthorblockN{Abhishek Sharma (MS)}
+		\IEEEauthorblockA{
+			\textit{Department of CSE} \\
+			\textit{Indian Institute of Technology} \\
+			Dharwad, India \\
+			cs24ms003@iitdh.ac.in
+		}
+	}
+	
+	\maketitle
+	
+	\begin{abstract}
+		\\
+		[Insert Abstract Here: Provide a brief summary of the project, methods, and key results.]
+	\end{abstract}
+	
+	\section{Introduction}
+	
+	[Insert the introduction here. Provide background information and the motivation for the research.]
+	
+	\section{Objectives}
+	
+	The key objectives of this project are:
+	
+	\begin{enumerate}
+		\item \textbf{Objective 1:} [Insert Objective 1 Here]
+		\item \textbf{Objective 2:} [Insert Objective 2 Here]
+		\item \textbf{Objective 3:} [Insert Objective 3 Here]
+	\end{enumerate}
+	
+	\section{Exploratory Data Analysis (EDA)}
+	
+	[Provide details on how the dataset was explored and analyzed before implementing the classifier.]
+	
+	\subsection{Data Distribution}
+	
+	[Discuss the distribution of the data points for each class in the feature space.]
+	
+	\subsection{Cluster Formation}
+	
+	[Insert description of how clusters were formed based on the data distribution.]
+	
+	\section{Data Processing}
+	
+	[Outline the steps of preprocessing the data.]
+	
+	\subsection{Normalization/Standardization}
+	
+	[Insert the approach used for normalizing or standardizing the data.]
+	
+	\subsection{Data Splitting}
+	
+	[Describe how the data was split into training and testing sets.]
+	
+	\section{Bayesian Classifier}
+	
+	\subsection{Multivariate Gaussian Distribution}
+	
+	[Provide the formulation for the multivariate Gaussian distribution.]
+	
+	\[
+	f(x; \mu, \Sigma) = \frac{1}{(2\pi)^{d/2} |\Sigma|^{1/2}} \exp\left(-\frac{1}{2} (x - \mu)^T \Sigma^{-1} (x - \mu)\right)
+	\]
+	
+	\subsection{Posterior Calculation}
+	
+	[Explain the process of posterior calculation using Bayes' theorem.]
+	
+	\section{Results and Observations}
+	
+	\begin{itemize}
+		\item \textbf{Precision per class}: [Insert Precision Results]
+		\item \textbf{Recall per class}: [Insert Recall Results]
+		\item \textbf{Mean Recall}: [Insert Mean Recall]
+		\item \textbf{F-Measure per class}: [Insert F-Measure Results]
+		\item \textbf{Classifier Accuracy}: [Insert Accuracy]
+	\end{itemize}
+	
+%	\begin{figure}[h!]
+%		\centering
+%%		\caption{[Insert Figure Caption]}
+%	\end{figure}
+	
+	\section{Conclusion}
+	
+	[Summarize the findings, conclusions, and possible future work.]
+	
+	\section*{Acknowledgment}
+	
+	[Insert acknowledgment text. Mention any individuals or institutions that contributed to the project.]
+	
+	\begin{thebibliography}{00}
+		
+		\bibitem{b1} [Insert citation 1 here]
+		\bibitem{b2} [Insert citation 2 here]
+		\bibitem{b3} [Insert citation 3 here]
+		\bibitem{b4} [Insert citation 4 here]
+		\bibitem{b5} [Insert citation 5 here]
+		
+	\end{thebibliography}
+	
+\end{document}
